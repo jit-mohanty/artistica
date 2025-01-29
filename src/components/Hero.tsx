@@ -9,7 +9,7 @@ const Hero = () => {
           alt="Hero background"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-art-purple-dark/70 to-art-blue-dark/70" />
       </div>
       <div className="container relative flex min-h-[80vh] items-center">
         <div className="max-w-2xl">
@@ -19,7 +19,10 @@ const Hero = () => {
           <p className="fade-in mt-6 text-lg text-white/90">
             Connect with talented artists and find the perfect piece for your space
           </p>
-          <Button className="fade-in mt-8 rounded-full" size="lg">
+          <Button 
+            className="fade-in mt-8 btn-gradient"
+            size="lg"
+          >
             Explore Collection
           </Button>
         </div>

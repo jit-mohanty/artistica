@@ -10,7 +10,7 @@ interface ArtworkCardProps {
 
 const ArtworkCard = ({ title, artist, price, imageUrl }: ArtworkCardProps) => {
   return (
-    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-art-purple-light/10">
       <CardContent className="p-0 relative">
         <div className="aspect-[3/4] overflow-hidden">
           <img
@@ -19,14 +19,14 @@ const ArtworkCard = ({ title, artist, price, imageUrl }: ArtworkCardProps) => {
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
-        <button className="absolute right-4 top-4 rounded-full bg-white/80 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <button className="absolute right-4 top-4 rounded-full bg-white/80 p-2 opacity-0 transition-opacity group-hover:opacity-100 hover:text-art-purple">
           <Heart className="h-5 w-5" />
         </button>
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-1 p-4">
-        <h3 className="font-serif text-lg font-medium">{title}</h3>
+        <h3 className="font-serif text-lg font-medium text-art-purple-dark">{title}</h3>
         <p className="text-sm text-muted-foreground">{artist}</p>
-        <p className="mt-2 font-medium">{price}</p>
+        <p className="mt-2 font-medium text-art-blue-dark">{price}</p>
       </CardFooter>
     </Card>
   );

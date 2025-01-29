@@ -16,7 +16,7 @@ const CategoryNav = () => {
         <Button
           key={category}
           variant="ghost"
-          className="whitespace-nowrap rounded-full"
+          className="whitespace-nowrap rounded-full hover:bg-art-purple-light/10 hover:text-art-purple-dark"
         >
           {category}
         </Button>
