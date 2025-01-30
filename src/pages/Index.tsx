@@ -12,6 +12,7 @@ const artworks = [
     title: "Mountain Sunrise",
     artist: "Jane Smith",
     price: "$1,200",
+    description: "A breathtaking view of mountains at dawn, capturing the first light of day.",
     imageUrl: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
   },
   {
@@ -19,6 +20,7 @@ const artworks = [
     title: "Urban Dreams",
     artist: "John Doe",
     price: "$950",
+    description: "Abstract interpretation of city life through vibrant colors and shapes.",
     imageUrl: "https://images.unsplash.com/photo-1501854140801-50d01698950b",
   },
   {
@@ -26,6 +28,7 @@ const artworks = [
     title: "Abstract Thoughts",
     artist: "Sarah Johnson",
     price: "$800",
+    description: "A modern piece exploring the complexity of human consciousness.",
     imageUrl: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
   },
   {
@@ -33,7 +36,24 @@ const artworks = [
     title: "Nature's Harmony",
     artist: "Michael Brown",
     price: "$1,500",
+    description: "A serene landscape showcasing the perfect balance in nature.",
     imageUrl: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+  },
+  {
+    id: 5,
+    title: "Ocean Whispers",
+    artist: "Emma Davis",
+    price: "$1,100",
+    description: "Capturing the mesmerizing patterns of waves at sunset.",
+    imageUrl: "https://images.unsplash.com/photo-1518998053901-5348d3961a04",
+  },
+  {
+    id: 6,
+    title: "City Lights",
+    artist: "David Wilson",
+    price: "$950",
+    description: "A dynamic nighttime cityscape filled with energy and movement.",
+    imageUrl: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59",
   },
 ];
 
@@ -66,9 +86,16 @@ const Index = () => {
           <h2 className="mb-8 font-serif text-3xl font-semibold">
             Featured Artworks
           </h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {artworks.map((artwork) => (
-              <ArtworkCard key={artwork.id} {...artwork} />
+              <ArtworkCard 
+                key={artwork.id} 
+                title={artwork.title}
+                artist={artwork.artist}
+                price={artwork.price}
+                imageUrl={artwork.imageUrl}
+                description={artwork.description}
+              />
             ))}
           </div>
         </section>
