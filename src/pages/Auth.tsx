@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -37,6 +37,7 @@ const authSchema = z.object({
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,6 +51,15 @@ const Auth = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof authSchema>, isLogin: boolean) => {
+    if (cooldownTime > 0) {
+      toast({
+        variant: "destructive",
+        title: "Please wait",
+        description: `Please wait ${cooldownTime} seconds before trying again.`,
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       console.log("Attempting auth with values:", { 
@@ -107,6 +117,22 @@ const Auth = () => {
         errorMessage = "This email is already registered. Please try logging in instead.";
       } else if (error.message.includes("invalid")) {
         errorMessage = "Please enter a valid email address. Example domains are not allowed.";
+      } else if (error.message.includes("rate limit") || error.code === "over_email_send_rate_limit") {
+        const waitTime = parseInt(error.message.match(/\d+/)?.[0] || "60");
+        setCooldownTime(waitTime);
+        
+        // Start countdown
+        const timer = setInterval(() => {
+          setCooldownTime((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+
+        errorMessage = `Please wait ${waitTime} seconds before trying again.`;
       }
       
       toast({
