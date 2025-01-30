@@ -25,7 +25,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const authSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z
+    .string()
+    .email("Please enter a valid email address")
+    .refine((email) => !email.endsWith("example.com"), {
+      message: "Please use a valid email address, not an example domain",
+    }),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["artist", "customer"]).optional(),
 });
@@ -100,6 +105,8 @@ const Auth = () => {
         errorMessage = "Invalid email or password. Please try again.";
       } else if (error.message.includes("User already registered")) {
         errorMessage = "This email is already registered. Please try logging in instead.";
+      } else if (error.message.includes("invalid")) {
+        errorMessage = "Please enter a valid email address. Example domains are not allowed.";
       }
       
       toast({
