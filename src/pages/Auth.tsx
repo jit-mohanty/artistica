@@ -25,8 +25,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const authSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["artist", "customer"]).optional(),
 });
 
@@ -47,12 +47,19 @@ const Auth = () => {
   const onSubmit = async (values: z.infer<typeof authSchema>, isLogin: boolean) => {
     try {
       setIsLoading(true);
+      console.log("Attempting auth with values:", { 
+        email: values.email, 
+        isLogin, 
+        role: values.role 
+      });
       
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: values.email,
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: values.email.trim(),
           password: values.password,
         });
+
+        console.log("Login response:", { data, error });
 
         if (error) throw error;
         
@@ -60,9 +67,11 @@ const Auth = () => {
           title: "Welcome back!",
           description: "You have successfully logged in.",
         });
+
+        navigate("/");
       } else {
-        const { error } = await supabase.auth.signUp({
-          email: values.email,
+        const { data, error } = await supabase.auth.signUp({
+          email: values.email.trim(),
           password: values.password,
           options: {
             data: {
@@ -71,20 +80,32 @@ const Auth = () => {
           },
         });
 
+        console.log("Signup response:", { data, error });
+
         if (error) throw error;
 
         toast({
           title: "Registration successful!",
           description: "Please check your email to verify your account.",
         });
-      }
 
-      navigate("/");
+        navigate("/");
+      }
     } catch (error: any) {
+      console.error("Auth error:", error);
+      
+      let errorMessage = "An error occurred during authentication.";
+      
+      if (error.message === "Invalid login credentials") {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (error.message.includes("User already registered")) {
+        errorMessage = "This email is already registered. Please try logging in instead.";
+      }
+      
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -110,7 +131,11 @@ const Auth = () => {
           </TabsList>
           
           <Form {...form}>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => {
+              e.preventDefault();
+              const isLogin = form.getValues().role === undefined;
+              form.handleSubmit((values) => onSubmit(values, isLogin))(e);
+            }}>
               <FormField
                 control={form.control}
                 name="email"
@@ -176,10 +201,9 @@ const Auth = () => {
 
               <TabsContent value="login">
                 <Button
-                  type="button"
+                  type="submit"
                   className="w-full"
                   disabled={isLoading}
-                  onClick={() => onSubmit(form.getValues(), true)}
                 >
                   Sign In
                 </Button>
@@ -187,10 +211,9 @@ const Auth = () => {
 
               <TabsContent value="register">
                 <Button
-                  type="button"
+                  type="submit"
                   className="w-full"
                   disabled={isLoading}
-                  onClick={() => onSubmit(form.getValues(), false)}
                 >
                   Create Account
                 </Button>
