@@ -1,5 +1,7 @@
 import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Hero from "@/components/Hero";
 import CategoryNav from "@/components/CategoryNav";
 import ArtworkCard from "@/components/ArtworkCard";
@@ -38,6 +40,14 @@ const artworks = [
 const Index = () => {
   return (
     <main className="min-h-screen">
+      <div className="container py-4">
+        <div className="flex justify-end">
+          <Button asChild variant="outline">
+            <Link to="/auth">Login / Register</Link>
+          </Button>
+        </div>
+      </div>
+      
       <Hero />
       
       <div className="container py-12">
